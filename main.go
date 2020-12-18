@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/scribble-rs/scribble.rs/database"
 	"log"
 	"math/rand"
 	"os"
@@ -34,6 +35,40 @@ func main() {
 
 	//Setting the seed in order for the petnames to be random.
 	rand.Seed(time.Now().UnixNano())
+
+	database.Init()
+	playerRecord1 := &database.PlayerRecord{
+		ID:        "Player1",
+		Name:      "First Player",
+		HighScore: 10,
+	}
+	playerRecord2 := &database.PlayerRecord{
+		ID:        "Player2",
+		Name:      "Second Player",
+		HighScore: 30,
+	}
+	playerRecord3 := &database.PlayerRecord{
+		ID:        "Player3",
+		Name:      "Third Player",
+		HighScore: 20,
+	}
+	var err error
+	if err = database.PutPlayerRecord(playerRecord1); err != nil {
+		log.Fatal(err)
+	}
+	if err = database.PutPlayerRecord(playerRecord2); err != nil {
+		log.Fatal(err)
+	}
+	if err = database.PutPlayerRecord(playerRecord3); err != nil {
+		log.Fatal(err)
+	}
+	var playerRecords []database.PlayerRecord
+	if playerRecords, err = database.GetPlayerRecords(); err != nil {
+		log.Fatal(err)
+	}
+	for _, playerRecord := range playerRecords {
+		log.Print(playerRecord)
+	}
 
 	log.Println("Started.")
 

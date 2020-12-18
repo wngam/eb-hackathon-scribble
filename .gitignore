@@ -2,3 +2,4 @@ pkged.go
 scribblers
 .vscode/
 *-packr.go
+*.iml
