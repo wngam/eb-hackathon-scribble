@@ -297,7 +297,7 @@ func (lobby *Lobby) PublishPlayerRecords() {
 		}
 		record := &database.PlayerRecord{
 			Name:       player.Name,
-			TotalScore: currentScore + playerRecord.TotalScore,
+			TotalScore: currentScore + player.LastScore,
 		}
 		if err := database.PutPlayerRecord(record); err != nil {
 			panic(err)
