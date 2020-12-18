@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/scribble-rs/scribble.rs/database"
 	"math/rand"
 	"sync"
 	"time"
@@ -283,4 +284,17 @@ func (lobby *Lobby) HasConnectedPlayers() bool {
 	}
 
 	return false
+}
+
+func (lobby *Lobby) PublishPlayerRecords() {
+	for _, player := range lobby.Players {
+		record := &database.PlayerRecord{
+			ID:        player.ID,
+			Name:      player.Name,
+			HighScore: player.Score,
+		}
+		if err := database.PutPlayerRecord(record); err != nil {
+			panic(err)
+		}
+	}
 }

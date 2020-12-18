@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/scribble-rs/scribble.rs/game"
 	"github.com/scribble-rs/scribble.rs/database"
+	"github.com/scribble-rs/scribble.rs/game"
 )
 
 //This file contains the API for the official web client.

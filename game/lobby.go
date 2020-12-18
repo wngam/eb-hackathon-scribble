@@ -457,6 +457,8 @@ func advanceLobby(lobby *Lobby) {
 
 	lobby.ClearDrawing()
 
+	lobby.PublishPlayerRecords()
+
 	newDrawer, roundOver := selectNextDrawer(lobby)
 	if roundOver {
 		if lobby.Round == lobby.MaxRounds {

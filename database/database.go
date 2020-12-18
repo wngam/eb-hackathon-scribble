@@ -2,12 +2,12 @@ package database
 
 import (
 	"fmt"
-	"sort"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"log"
+	"sort"
 )
 
 type PlayerRecord struct {
@@ -51,6 +51,11 @@ func GetPlayerRecords() ([]PlayerRecord, error) {
 		return nil, err
 	}
 
+	log.Printf("Successfully retrieved %v player records:\n", len(playerRecords))
+	for _, playerRecord := range playerRecords {
+		log.Print(playerRecord)
+	}
+
 	return playerRecords, nil
 }
 
@@ -71,10 +76,12 @@ func PutPlayerRecord(record *PlayerRecord) error {
 		return err
 	}
 
+	log.Printf("Successfully put player record: %v", record)
+
 	return nil
 }
 
-func GetHighScores() ([]PlayerRecord) {
+func GetHighScores() []PlayerRecord {
 	playerRecords, err := GetPlayerRecords()
 	if err != nil {
 		return playerRecords
