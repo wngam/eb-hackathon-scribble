@@ -288,16 +288,16 @@ func (lobby *Lobby) HasConnectedPlayers() bool {
 
 func (lobby *Lobby) PublishPlayerRecords() {
 	for _, player := range lobby.Players {
-		player, err := database.GetPlayerRecord(player.Name)
+		playerRecord, err := database.GetPlayerRecord(player.Name)
 		var currentScore int
 		if err != nil {
 			currentScore = 0
 		} else {
-			currentScore = player.TotalScore
+			currentScore = playerRecord.TotalScore
 		}
 		record := &database.PlayerRecord{
-			Name:      player.Name,
-			TotalScore: currentScore + player.TotalScore,
+			Name:       player.Name,
+			TotalScore: currentScore + playerRecord.TotalScore,
 		}
 		if err := database.PutPlayerRecord(record); err != nil {
 			panic(err)
