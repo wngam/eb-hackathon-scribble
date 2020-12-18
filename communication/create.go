@@ -26,6 +26,7 @@ func createDefaultLobbyCreatePageData() *CreatePageData {
 	return &CreatePageData{
 		SettingBounds:     game.LobbySettingBounds,
 		Languages:         game.SupportedLanguages,
+		LobbyId:           game.GeneratePlayerName(),
 		DrawingTime:       "120",
 		Rounds:            "4",
 		MaxPlayers:        "12",
@@ -41,6 +42,7 @@ type CreatePageData struct {
 	*game.SettingBounds
 	Errors            []string
 	Languages         map[string]string
+	LobbyId           string
 	DrawingTime       string
 	Rounds            string
 	MaxPlayers        string
@@ -60,6 +62,7 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	lobbyId, lobbyIdInvalid := parseLobbyId(r.Form.Get("lobby_id"))
 	language, languageInvalid := parseLanguage(r.Form.Get("language"))
 	drawingTime, drawingTimeInvalid := parseDrawingTime(r.Form.Get("drawing_time"))
 	rounds, roundsInvalid := parseRounds(r.Form.Get("rounds"))
@@ -73,6 +76,7 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 	pageData := CreatePageData{
 		SettingBounds:     game.LobbySettingBounds,
 		Languages:         game.SupportedLanguages,
+		LobbyId:           r.Form.Get("lobby_id"),
 		DrawingTime:       r.Form.Get("drawing_time"),
 		Rounds:            r.Form.Get("rounds"),
 		MaxPlayers:        r.Form.Get("max_players"),
@@ -83,6 +87,9 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 		Language:          r.Form.Get("language"),
 	}
 
+	if lobbyIdInvalid != nil {
+		pageData.Errors = append(pageData.Errors, lobbyIdInvalid.Error())
+	}
 	if languageInvalid != nil {
 		pageData.Errors = append(pageData.Errors, languageInvalid.Error())
 	}
@@ -115,7 +122,7 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 
 	var playerName = getPlayername(r)
 
-	player, lobby, createError := game.CreateLobby(playerName, language, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
+	player, lobby, createError := game.CreateLobby(lobbyId, playerName, language, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
 	if createError != nil {
 		pageData.Errors = append(pageData.Errors, createError.Error())
 		templateError := lobbyCreatePage.ExecuteTemplate(w, "lobby_create.html", pageData)
@@ -150,6 +157,15 @@ func parsePlayerName(value string) (string, error) {
 
 func parsePassword(value string) (string, error) {
 	return value, nil
+}
+
+func parseLobbyId(value string) (string, error) {
+	trimmed := strings.TrimSpace(value)
+	if trimmed == "" {
+		return trimmed, errors.New("the lobby name must not be empty")
+	}
+
+	return trimmed, nil
 }
 
 func parseLanguage(value string) (string, error) {

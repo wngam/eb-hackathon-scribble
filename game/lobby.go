@@ -368,13 +368,13 @@ func commandNick(caller *Player, lobby *Lobby, name string) {
 		newName = newName[:31]
 	}
 
+	fmt.Printf("%s is now %s\n", caller.Name, newName)
+
 	if newName == "" {
 		caller.Name = GeneratePlayerName()
 	} else {
 		caller.Name = newName
 	}
-
-	fmt.Printf("%s is now %s\n", caller.Name, newName)
 
 	triggerPlayersUpdate(lobby)
 }
@@ -644,8 +644,8 @@ type Rounds struct {
 
 // CreateLobby allows creating a lobby, optionally returning errors that
 // occurred during creation.
-func CreateLobby(playerName, language string, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit int, customWords []string, enableVotekick bool) (*Player, *Lobby, error) {
-	lobby := createLobby(drawingTime, rounds, maxPlayers, customWords, customWordChance, clientsPerIPLimit, enableVotekick)
+func CreateLobby(lobbyId, playerName, language string, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit int, customWords []string, enableVotekick bool) (*Player, *Lobby, error) {
+	lobby := createLobby(lobbyId, drawingTime, rounds, maxPlayers, customWords, customWordChance, clientsPerIPLimit, enableVotekick)
 	player := createPlayer(playerName)
 
 	lobby.Players = append(lobby.Players, player)

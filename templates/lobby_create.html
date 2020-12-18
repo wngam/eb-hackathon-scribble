@@ -30,7 +30,9 @@
 
             {{end}}
             <form id="lobby-create" class="input-container" action="/ssrCreateLobby" method="POST">
-                <b>Lobby-Language</b>
+                <b>Lobby Name</b>
+                <input class="input-item" type="text" name="lobby_id" value="{{.LobbyId}}"/>
+                <b>Lobby Language</b>
                 <select class="input-item" name="language" placeholder="Choose your language">
                     {{$language := .Language}}
                     {{range $k, $v := .Languages}}

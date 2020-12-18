@@ -233,6 +233,7 @@ func createPlayer(name string) *Player {
 }
 
 func createLobby(
+	lobbyId string,
 	drawingTime int,
 	rounds int,
 	maxPlayers int,
@@ -244,15 +245,15 @@ func createLobby(
 	createDeleteMutex.Lock()
 
 	lobby := &Lobby{
-		ID:                  uuid.NewV4().String(),
-		DrawingTime:         drawingTime,
-		MaxRounds:           rounds,
-		MaxPlayers:          maxPlayers,
-		CustomWords:         customWords,
-		CustomWordsChance:   customWordsChance,
-		ClientsPerIPLimit:   clientsPerIPLimit,
-		EnableVotekick:      enableVotekick,
-		CurrentDrawing:      make([]interface{}, 0, 0),
+		ID:                lobbyId,
+		DrawingTime:       drawingTime,
+		MaxRounds:         rounds,
+		MaxPlayers:        maxPlayers,
+		CustomWords:       customWords,
+		CustomWordsChance: customWordsChance,
+		ClientsPerIPLimit: clientsPerIPLimit,
+		EnableVotekick:    enableVotekick,
+		CurrentDrawing:    make([]interface{}, 0, 0),
 	}
 
 	if len(customWords) > 1 {
