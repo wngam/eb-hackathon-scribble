@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"errors"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -11,9 +12,8 @@ import (
 )
 
 type PlayerRecord struct {
-	ID        string
-	Name      string
-	HighScore int
+	Name       string
+	TotalScore int
 }
 
 const (
@@ -59,6 +59,34 @@ func GetPlayerRecords() ([]PlayerRecord, error) {
 	return playerRecords, nil
 }
 
+func GetPlayerRecord(name string) (PlayerRecord, error) {
+	var playerRecord PlayerRecord
+
+	result, err := svc.GetItem(&dynamodb.GetItemInput{
+		TableName: aws.String(tableName),
+		Key: map[string]*dynamodb.AttributeValue{
+			"Name": {
+				S: aws.String(name),
+			},
+		},
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+		return playerRecord, err
+	}
+	if result.Item == nil {
+		msg := "Could not find '" + name + "'"
+		return playerRecord, errors.New(msg)
+	}
+	
+	err = dynamodbattribute.UnmarshalMap(result.Item, &playerRecord)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to unmarshal Record, %v", err))
+	}
+
+	return playerRecord, nil
+}
+
 func PutPlayerRecord(record *PlayerRecord) error {
 	av, err := dynamodbattribute.MarshalMap(record)
 	if err != nil {
@@ -81,14 +109,14 @@ func PutPlayerRecord(record *PlayerRecord) error {
 	return nil
 }
 
-func GetHighScores() []PlayerRecord {
+func GetTotalScores() []PlayerRecord {
 	playerRecords, err := GetPlayerRecords()
 	if err != nil {
 		return playerRecords
 	}
 
 	sort.Slice(playerRecords, func(i, j int) bool {
-		return playerRecords[i].HighScore > playerRecords[j].HighScore
+		return playerRecords[i].TotalScore > playerRecords[j].TotalScore
 	})
 
 	return playerRecords

@@ -74,10 +74,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{range $item := .HighScores}}
+                    {{range $item := .TotalScores}}
                         <tr>
                             <td>{{$item.Name}}</td>
-                            <td>{{$item.HighScore}}</td>
+                            <td>{{$item.TotalScore}}</td>
                         </tr>
                     {{end}}
                 </tbody>

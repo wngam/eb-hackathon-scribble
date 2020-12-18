@@ -3,6 +3,7 @@ package communication
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
@@ -27,7 +28,7 @@ func createDefaultLobbyCreatePageData() *CreatePageData {
 	return &CreatePageData{
 		SettingBounds:     game.LobbySettingBounds,
 		Languages:         game.SupportedLanguages,
-		LobbyId:           "Beanstalk",
+		LobbyId:           fmt.Sprintf("Beanstalk%v", rand.Intn(100)),
 		DrawingTime:       "120",
 		Rounds:            "4",
 		MaxPlayers:        "12",
@@ -35,7 +36,7 @@ func createDefaultLobbyCreatePageData() *CreatePageData {
 		ClientsPerIPLimit: "1",
 		EnableVotekick:    "true",
 		Language:          "english",
-		HighScores:        database.GetHighScores(),
+		TotalScores:        database.GetTotalScores(),
 	}
 }
 
@@ -53,7 +54,7 @@ type CreatePageData struct {
 	ClientsPerIPLimit string
 	EnableVotekick    string
 	Language          string
-	HighScores        []database.PlayerRecord
+	TotalScores        []database.PlayerRecord
 }
 
 // ssrCreateLobby allows creating a lobby, optionally returning errors that
