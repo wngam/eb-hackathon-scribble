@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/scribble-rs/scribble.rs/game"
+	"github.com/scribble-rs/scribble.rs/database"
 )
 
 //This file contains the API for the official web client.
@@ -34,6 +35,7 @@ func createDefaultLobbyCreatePageData() *CreatePageData {
 		ClientsPerIPLimit: "1",
 		EnableVotekick:    "true",
 		Language:          "english",
+		HighScores:        database.GetHighScores(),
 	}
 }
 
@@ -51,6 +53,7 @@ type CreatePageData struct {
 	ClientsPerIPLimit string
 	EnableVotekick    string
 	Language          string
+	HighScores        []database.PlayerRecord
 }
 
 // ssrCreateLobby allows creating a lobby, optionally returning errors that

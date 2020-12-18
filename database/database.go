@@ -2,8 +2,10 @@ package database
 
 import (
 	"fmt"
+	"sort"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"log"
@@ -71,4 +73,17 @@ func PutPlayerRecord(record *PlayerRecord) error {
 	}
 
 	return nil
+}
+
+func GetHighScores() ([]PlayerRecord) {
+	playerRecords, err := GetPlayerRecords()
+	if err != nil {
+		return playerRecords
+	}
+
+	sort.Slice(playerRecords, func(i, j int) bool {
+		return playerRecords[i].HighScore > playerRecords[j].HighScore
+	})
+
+	return playerRecords
 }
