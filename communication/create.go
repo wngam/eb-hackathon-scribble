@@ -27,7 +27,7 @@ func createDefaultLobbyCreatePageData() *CreatePageData {
 	return &CreatePageData{
 		SettingBounds:     game.LobbySettingBounds,
 		Languages:         game.SupportedLanguages,
-		LobbyId:           game.GeneratePlayerName(),
+		LobbyId:           "Beanstalk",
 		DrawingTime:       "120",
 		Rounds:            "4",
 		MaxPlayers:        "12",
